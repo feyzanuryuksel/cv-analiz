@@ -14,16 +14,22 @@ function App() {
   const [analysisProgress, setAnalysisProgress] = useState(0);
 
   const handleDrag = (e) => {
-    e.preventDefault(); e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
-    else if (e.type === "dragleave") setDragActive(false);
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
   };
 
   const handleDrop = (e) => {
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
     setDragActive(false);
+    
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile?.type === 'application/pdf') {
+    if (droppedFile && droppedFile.type === 'application/pdf') {
       setFile(droppedFile);
       setError(null);
     } else {
@@ -42,41 +48,57 @@ function App() {
     setError(null);
   };
 
-  // 🕒 Yavaşlatılmış ve senkronize edilmiş analiz barı
   const simulateProgress = () => {
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.random() * 5 + 2; // Daha küçük ve kontrollü artış
-      if (progress > 92) {
-        progress = 92;
+      progress += Math.random() * 15;
+      if (progress > 90) {
+        progress = 90;
         clearInterval(interval);
       }
-      setAnalysisProgress(Math.min(progress, 92));
-    }, 850); // Adım süresi artırıldı
+      setAnalysisProgress(Math.min(progress, 90));
+    }, 500);
     return interval;
   };
 
   const handleUpload = async () => {
-    if (!file) { setError("Lütfen önce bir PDF dosyası seçin."); return; }
+    if (!file) {
+      setError("Lütfen önce bir PDF dosyası seçin.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append('cv', file);
-    setLoading(true); setAnalysis(null); setError(null); setAnalysisProgress(0);
+
+    setLoading(true);
+    setAnalysis(null);
+    setError(null);
+    setAnalysisProgress(0);
+
     const progressInterval = simulateProgress();
 
     try {
       const response = await axios.post(`${API_URL}/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+
       clearInterval(progressInterval);
       setAnalysisProgress(100);
+
       setTimeout(() => {
-        if (response.data.success) setAnalysis(response.data.data);
-        else setError(response.data.error || "Bilinmeyen bir hata oluştu.");
+        if (response.data.success) {
+          setAnalysis(response.data.data);
+        } else {
+          setError(response.data.error || "Bilinmeyen bir hata oluştu.");
+        }
         setLoading(false);
-      }, 800);
+      }, 500);
+
     } catch (err) {
       clearInterval(progressInterval);
-      setError(err.response?.data?.error || "Sunucu hatası oluştu.");
+      const errorMsg = err.response?.data?.error || "Sunucuya bağlanılamadı. Lütfen backend'in çalıştığından emin olun.";
+      setError(errorMsg);
+      console.error("Hata Detayı:", err);
       setLoading(false);
     }
   };
@@ -90,8 +112,13 @@ function App() {
       </div>
 
       <header className="hero-header">
-        <div className="logo-icon"><Sparkles size={32} /></div>
+        <div className="logo-icon">
+          <Sparkles size={32} />
+        </div>
         <h1 className="gradient-text">AI CV Analyzer</h1>
+        <p className="subtitle">
+          Yapay zeka destekli CV analizi ile kariyerinizi şekillendirin
+        </p>
         <div className="feature-badges">
           <span className="badge"><Zap size={14} /> Anlık Analiz</span>
           <span className="badge"><Brain size={14} /> AI Destekli</span>
@@ -101,24 +128,63 @@ function App() {
 
       <main>
         <section className="upload-section glass-effect">
-          <div className={`drop-zone ${dragActive ? 'drag-active' : ''} ${file ? 'has-file' : ''}`}
-            onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-            <input type="file" onChange={handleFileChange} accept=".pdf" id="cv-upload" />
+          <div 
+            className={`drop-zone ${dragActive ? 'drag-active' : ''} ${file ? 'has-file' : ''}`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <input 
+              type="file" 
+              onChange={handleFileChange} 
+              accept=".pdf" 
+              id="cv-upload" 
+            />
             <label htmlFor="cv-upload" className="upload-label">
               <div className="upload-icon-wrapper">
                 <Upload size={48} className="upload-icon" />
                 <div className="upload-pulse"></div>
               </div>
               <div className="upload-text">
-                <span className="upload-title">{file ? file.name : "CV'nizi Buraya Sürükleyin"}</span>
-                <span className="upload-subtitle">{file ? `${(file.size / 1024).toFixed(1)} KB` : "veya tıklayarak seçin"}</span>
+                <span className="upload-title">
+                  {file ? file.name : "CV'nizi Buraya Sürükleyin"}
+                </span>
+                <span className="upload-subtitle">
+                  {file ? `${(file.size / 1024).toFixed(1)} KB - PDF` : "veya tıklayarak seçin"}
+                </span>
               </div>
             </label>
           </div>
-          <button onClick={handleUpload} disabled={loading || !file} className="analyze-btn">
-            {loading ? "Analiz Ediliyor..." : <><Sparkles size={20} /> Analizi Başlat</>}
+          
+          <button 
+            onClick={handleUpload} 
+            disabled={loading || !file} 
+            className="analyze-btn"
+          >
+            {loading ? (
+              <div className="btn-loading-content">
+                <div className="loading-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span>Analiz Ediliyor</span>
+              </div>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                <span>Analizi Başlat</span>
+              </>
+            )}
           </button>
-          {error && <div className="error-msg slide-in"><AlertCircle size={20}/> {error}</div>}
+
+          {error && (
+            <div className="error-msg slide-in">
+              <AlertCircle size={20}/> 
+              <span>{error}</span>
+            </div>
+          )}
         </section>
 
         {loading && (
@@ -128,19 +194,41 @@ function App() {
                 <div className="brain-animation">
                   <Brain size={60} className="brain-icon pulse-animation" />
                   <div className="neural-lines">
-                    {[...Array(6)].map((_, i) => <div key={i} className={`neural-line line-${i + 1}`}></div>)}
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`neural-line line-${i + 1}`}></div>
+                    ))}
                   </div>
                 </div>
-                <h3>CV Analiz Motoru Çalışıyor</h3>
+                
+                <h3>CV'niz Analiz Ediliyor</h3>
+                
                 <div className="progress-container">
-                  <div className="progress-bar"><div className="progress-fill" style={{ width: `${analysisProgress}%` }}></div></div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill" 
+                      style={{ width: `${analysisProgress}%` }}
+                    ></div>
+                  </div>
                   <span className="progress-text">%{Math.round(analysisProgress)}</span>
                 </div>
+
                 <div className="analysis-steps">
-                  <div className={`step ${analysisProgress > 25 ? 'completed' : ''}`}><CheckCircle size={16} /> CV formatı kontrol ediliyor</div>
-                  <div className={`step ${analysisProgress > 50 ? 'completed' : ''}`}><CheckCircle size={16} /> Yetenekler analiz ediliyor</div>
-                  <div className={`step ${analysisProgress > 75 ? 'completed' : ''}`}><CheckCircle size={16} /> Deneyimler puanlanıyor</div>
-                  <div className={`step ${analysisProgress > 90 ? 'completed' : ''}`}><CheckCircle size={16} /> ATS skoru hesaplanıyor</div>
+                  <div className={`step ${analysisProgress > 20 ? 'completed' : ''}`}>
+                    <CheckCircle size={16} />
+                    <span>CV formatı kontrol ediliyor</span>
+                  </div>
+                  <div className={`step ${analysisProgress > 40 ? 'completed' : ''}`}>
+                    <CheckCircle size={16} />
+                    <span>Yetenekler analiz ediliyor</span>
+                  </div>
+                  <div className={`step ${analysisProgress > 60 ? 'completed' : ''}`}>
+                    <CheckCircle size={16} />
+                    <span>Deneyimler değerlendiriliyor</span>
+                  </div>
+                  <div className={`step ${analysisProgress > 80 ? 'completed' : ''}`}>
+                    <CheckCircle size={16} />
+                    <span>ATS uyumluluğu hesaplanıyor</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -152,44 +240,94 @@ function App() {
             <div className="result-header glass-effect">
               <div className="header-content">
                 <div className="candidate-info">
-                  <div className="avatar">{analysis.adSoyad?.charAt(0) || "A"}</div>
+                  <div className="avatar">
+                    {analysis.adSoyad?.charAt(0) || "A"}
+                  </div>
                   <div>
                     <h2>{analysis.adSoyad || "Aday"}</h2>
-                    <p className="result-date">Analiz Tarihi: {new Date().toLocaleDateString('tr-TR')}</p>
+                    <p className="result-date">Analiz tamamlandı • {new Date().toLocaleDateString('tr-TR')}</p>
                   </div>
                 </div>
                 <div className="score-container">
-                  <div className="score-circle" style={{ background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, rgba(255,255,255,0.1) 0deg)` }}>
+                  <div className="score-circle" style={{
+                    background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
+                  }}>
                     <div className="score-inner">
-                      <span className="score-number">{analysis.atsUyumlulukSkoru}</span>
+                      <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
                       <span className="score-label">% ATS</span>
                     </div>
                   </div>
                 </div>
               </div>
+              <div className="score-bar">
+                <div className="score-bar-fill" style={{ width: `${analysis.atsUyumlulukSkoru || 0}%` }}></div>
+              </div>
             </div>
 
             <div className="summary-card glass-effect">
-              <div className="card-header"><FileText size={22} color="#6c5ce7"/> <h3>Profesyonel Özet</h3></div>
-              <p className="summary-text">{analysis.ozet}</p>
+              <div className="card-header">
+                <FileText size={24} className="card-icon"/>
+                <h3>Profesyonel Özet</h3>
+              </div>
+              <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
             </div>
 
             <div className="grid-container">
               <div className="card glass-effect hover-lift">
-                <div className="card-header"><Brain size={22} color="#6c5ce7"/> <h3>Yetenekler</h3></div>
-                <div className="tags">{(analysis.yetenekler || []).map((y, i) => <span key={i} className="tag">{y}</span>)}</div>
+                <div className="card-header">
+                  <Brain size={24} className="card-icon"/>
+                  <h3>Yetenekler</h3>
+                </div>
+                <div className="tags">
+                  {(analysis.yetenekler || []).map((y, i) => (
+                    <span key={i} className="tag tag-animated">{y}</span>
+                  ))}
+                </div>
               </div>
+
               <div className="card glass-effect hover-lift">
-                <div className="card-header"><Award size={22} color="#10b981"/> <h3>Güçlü Yanlar</h3></div>
-                <ul className="feature-list">{(analysis.gucluYanlar || []).map((g, i) => <li key={i} className="feature-item"><CheckCircle size={14} color="#10b981"/>{g}</li>)}</ul>
+                <div className="card-header">
+                  <Award size={24} className="card-icon"/>
+                  <h3>Güçlü Yanlar</h3>
+                </div>
+                <ul className="feature-list">
+                  {(analysis.gucluYanlar || []).map((g, i) => (
+                    <li key={i} className="feature-item">
+                      <CheckCircle size={16} color="#10b981" />
+                      <span>{g}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+
               <div className="card glass-effect hover-lift">
-                <div className="card-header"><Target size={22} color="#f59e0b"/> <h3>Gelişim Alanları</h3></div>
-                <ul className="feature-list">{(analysis.gelistirilmesiGerekenler || []).map((g, i) => <li key={i} className="feature-item"><AlertCircle size={14} color="#f59e0b"/>{g}</li>)}</ul>
+                <div className="card-header">
+                  <Target size={24} className="card-icon"/>
+                  <h3>Geliştirilmesi Gerekenler</h3>
+                </div>
+                <ul className="feature-list">
+                  {(analysis.gelistirilmesiGerekenler || []).map((g, i) => (
+                    <li key={i} className="feature-item">
+                      <AlertCircle size={16} color="#f59e0b" />
+                      <span>{g}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+
               <div className="card glass-effect hover-lift">
-                <div className="card-header"><TrendingUp size={22} color="#fd79a8"/> <h3>Önerilen Roller</h3></div>
-                <ul className="feature-list">{(analysis.onerilenPozisyonlar || []).map((p, i) => <li key={i} className="feature-item"><Sparkles size={14} color="#fd79a8"/>{p}</li>)}</ul>
+                <div className="card-header">
+                  <FileText size={24} className="card-icon"/>
+                  <h3>Önerilen Pozisyonlar</h3>
+                </div>
+                <ul className="feature-list">
+                  {(analysis.onerilenPozisyonlar || []).map((p, i) => (
+                    <li key={i} className="feature-item">
+                      <TrendingUp size={16} color="#8b5cf6" />
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </section>
