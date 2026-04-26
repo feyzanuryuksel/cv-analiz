@@ -119,15 +119,21 @@ body {
   50% { transform: perspective(1000px) rotateY(10deg) rotateX(5deg); }
 }
 
+/* Gradient Text - Düzeltilmiş Versiyon */
 .gradient-text {
   font-size: 3.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  background: linear-gradient(135deg, #6c5ce7, #00cec9, #fd79a8);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* Fallback için */
   margin-bottom: 15px;
   letter-spacing: -1px;
+  line-height: 1.2; /* Satır yüksekliği eklendi */
+  display: inline-block; /* veya block */
+  width: 100%; /* Tam genişlik */
+  word-wrap: break-word;
 }
 
 .subtitle {
