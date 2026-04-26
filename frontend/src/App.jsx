@@ -50,14 +50,15 @@ function App() {
 
   const simulateProgress = () => {
     let progress = 0;
+    // Tiklerin daha yavaş ve gerçekçi dolması için ayarlar:
     const interval = setInterval(() => {
-      progress += Math.random() * 15;
-      if (progress > 90) {
-        progress = 90;
+      progress += Math.random() * 6; // Artış miktarını düşürdük
+      if (progress > 94) {
+        progress = 94;
         clearInterval(interval);
       }
-      setAnalysisProgress(Math.min(progress, 90));
-    }, 500);
+      setAnalysisProgress(Math.min(progress, 94));
+    }, 900); // 900ms aralıklarla güncelleme
     return interval;
   };
 
@@ -85,6 +86,7 @@ function App() {
       clearInterval(progressInterval);
       setAnalysisProgress(100);
 
+      // 100% olduktan sonra kısa bir bekleyiş ve sonuçları göster
       setTimeout(() => {
         if (response.data.success) {
           setAnalysis(response.data.data);
@@ -92,13 +94,12 @@ function App() {
           setError(response.data.error || "Bilinmeyen bir hata oluştu.");
         }
         setLoading(false);
-      }, 500);
+      }, 700);
 
     } catch (err) {
       clearInterval(progressInterval);
       const errorMsg = err.response?.data?.error || "Sunucuya bağlanılamadı. Lütfen backend'in çalıştığından emin olun.";
       setError(errorMsg);
-      console.error("Hata Detayı:", err);
       setLoading(false);
     }
   };
@@ -116,7 +117,7 @@ function App() {
           <Sparkles size={32} />
         </div>
         <h1 className="gradient-text">AI CV Analyzer</h1>
-    
+        
         <div className="feature-badges">
           <span className="badge"><Zap size={14} /> Anlık Analiz</span>
           <span className="badge"><Brain size={14} /> AI Destekli</span>
@@ -163,9 +164,7 @@ function App() {
             {loading ? (
               <div className="btn-loading-content">
                 <div className="loading-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                  <span></span><span></span><span></span>
                 </div>
                 <span>Analiz Ediliyor</span>
               </div>
@@ -198,7 +197,7 @@ function App() {
                   </div>
                 </div>
                 
-                <h3>CV'niz Analiz Ediliyor</h3>
+                <h3>Analiz Motoru Çalışıyor</h3>
                 
                 <div className="progress-container">
                   <div className="progress-bar">
@@ -211,21 +210,21 @@ function App() {
                 </div>
 
                 <div className="analysis-steps">
-                  <div className={`step ${analysisProgress > 20 ? 'completed' : ''}`}>
+                  <div className={`step ${analysisProgress > 25 ? 'completed' : ''}`}>
                     <CheckCircle size={16} />
-                    <span>CV formatı kontrol ediliyor</span>
+                    <span>CV formatı ve OCR kontrolü</span>
                   </div>
-                  <div className={`step ${analysisProgress > 40 ? 'completed' : ''}`}>
+                  <div className={`step ${analysisProgress > 50 ? 'completed' : ''}`}>
                     <CheckCircle size={16} />
-                    <span>Yetenekler analiz ediliyor</span>
+                    <span>Yetenek ve tecrübe eşleşmesi</span>
                   </div>
-                  <div className={`step ${analysisProgress > 60 ? 'completed' : ''}`}>
+                  <div className={`step ${analysisProgress > 75 ? 'completed' : ''}`}>
                     <CheckCircle size={16} />
-                    <span>Deneyimler değerlendiriliyor</span>
+                    <span>Profesyonel dil ve ton analizi</span>
                   </div>
-                  <div className={`step ${analysisProgress > 80 ? 'completed' : ''}`}>
+                  <div className={`step ${analysisProgress > 90 ? 'completed' : ''}`}>
                     <CheckCircle size={16} />
-                    <span>ATS uyumluluğu hesaplanıyor</span>
+                    <span>ATS uyumluluk skorlaması</span>
                   </div>
                 </div>
               </div>
@@ -248,7 +247,7 @@ function App() {
                 </div>
                 <div className="score-container">
                   <div className="score-circle" style={{
-                    background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
+                    background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, rgba(255,255,255,0.1) 0deg)`
                   }}>
                     <div className="score-inner">
                       <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
@@ -267,7 +266,7 @@ function App() {
                 <FileText size={24} className="card-icon"/>
                 <h3>Profesyonel Özet</h3>
               </div>
-              <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
+              <p className="summary-text">{analysis.ozet || "Özet çıkarılamadı."}</p>
             </div>
 
             <div className="grid-container">
@@ -301,7 +300,7 @@ function App() {
               <div className="card glass-effect hover-lift">
                 <div className="card-header">
                   <Target size={24} className="card-icon"/>
-                  <h3>Geliştirilmesi Gerekenler</h3>
+                  <h3>Geliştirme Alanları</h3>
                 </div>
                 <ul className="feature-list">
                   {(analysis.gelistirilmesiGerekenler || []).map((g, i) => (
@@ -316,7 +315,7 @@ function App() {
               <div className="card glass-effect hover-lift">
                 <div className="card-header">
                   <FileText size={24} className="card-icon"/>
-                  <h3>Önerilen Pozisyonlar</h3>
+                  <h3>Önerilen Roller</h3>
                 </div>
                 <ul className="feature-list">
                   {(analysis.onerilenPozisyonlar || []).map((p, i) => (
