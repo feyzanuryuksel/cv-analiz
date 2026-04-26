@@ -116,9 +116,7 @@ function App() {
           <Sparkles size={32} />
         </div>
         <h1 className="gradient-text">AI CV Analyzer</h1>
-        <p className="subtitle">
-          Yapay zeka destekli CV analizi ile kariyerinizi şekillendirin
-        </p>
+    
         <div className="feature-badges">
           <span className="badge"><Zap size={14} /> Anlık Analiz</span>
           <span className="badge"><Brain size={14} /> AI Destekli</span>
