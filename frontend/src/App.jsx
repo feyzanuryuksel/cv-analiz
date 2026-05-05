@@ -13,7 +13,8 @@ import {
   Zap, 
   MessageSquare,
   Key,
-  Languages // Yeni ikon eklendi
+  Languages,
+  Compass // Kariyer yolu için yeni ikon
 } from 'lucide-react';
 import './App.css';
 
@@ -263,7 +264,7 @@ function App() {
                   </div>
                 </div>
                 
-                {/* İki Skor Yanyana Eklendi */}
+                {/* İki Skor Yanyana */}
                 <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                   <div className="score-container">
                     <div className="score-circle" style={{
@@ -294,18 +295,14 @@ function App() {
               </div>
             </div>
 
-            {/* Dil ve Ton Analizi Geri Bildirimi (YENİ) */}
+            {/* DÜZELTİLEN: Dil ve Ton Analizi Geri Bildirimi (Profesyonel Özet ile aynı stil) */}
             {analysis.dilGeriBildirimi && (
-              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #3b82f6' }}>
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
                 <div className="card-header">
-                  <Languages size={24} color="#3b82f6" className="card-icon"/>
+                  <Languages size={24} className="card-icon"/>
                   <h3>Dil Bilgisi ve Profesyonel Ton</h3>
                 </div>
-                <div style={{ padding: '1rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', marginTop: '1rem' }}>
-                  <p className="summary-text" style={{ color: '#1f2937', fontWeight: '500' }}>
-                    {analysis.dilGeriBildirimi}
-                  </p>
-                </div>
+                <p className="summary-text">{analysis.dilGeriBildirimi}</p>
               </div>
             )}
 
@@ -334,6 +331,40 @@ function App() {
                 <p style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.8rem' }}>
                   * Bu kelimeleri CV'nize eklemek ATS puanınızı artırabilir.
                 </p>
+              </div>
+            )}
+
+            {/* YENİ EKLENEN: Kariyer Yol Haritası */}
+            {analysis.kariyerYolHaritasi && analysis.kariyerYolHaritasi.length > 0 && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #8b5cf6' }}>
+                <div className="card-header">
+                  <Compass size={24} color="#8b5cf6" className="card-icon"/>
+                  <h3>Kariyer Yol Haritası (1-2 Yıllık)</h3>
+                </div>
+                <ul className="feature-list" style={{ marginTop: '1rem' }}>
+                  {analysis.kariyerYolHaritasi.map((adim, i) => (
+                    <li key={i} className="feature-item" style={{ alignItems: 'flex-start', marginBottom: '1rem' }}>
+                      <div style={{
+                        background: '#8b5cf6',
+                        color: 'white',
+                        borderRadius: '50%',
+                        width: '24px',
+                        height: '24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        flexShrink: 0,
+                        marginTop: '2px',
+                        marginRight: '10px'
+                      }}>
+                        {i + 1}
+                      </div>
+                      <span style={{ lineHeight: '1.5', color: '#374151' }}>{adim}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
