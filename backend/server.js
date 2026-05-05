@@ -80,15 +80,26 @@ async function analyzeCVWithAI(cvText) {
       "gucluYanlar": [],
       "gelistirilmesiGerekenler": [],
       "onerilenPozisyonlar": [],
-      "atsUyumlulukSkoru": 0
+      "atsUyumlulukSkoru": 0,
+      "mulakatSorulari": [],
+      "eksikAnahtarKelimeler": [],
+      "profesyonellikSkoru": 0,
+      "dilGeriBildirimi": ""
     }
+    
+    Talimatlar:
+    1. "mulakatSorulari": Adayın deneyimlerine dayanarak 3 zorlayıcı teknik mülakat sorusu üret.
+    2. "eksikAnahtarKelimeler": Sektör bazlı CV'de eksik olan 5 kritik anahtar kelimeyi listele.
+    3. "profesyonellikSkoru": CV'nin dil bilgisi, imla ve profesyonel tonunu 0-100 arası puanla.
+    4. "dilGeriBildirimi": Yazım dili hakkında spesifik eleştiriler yap (Örn: "Cümleler çok pasif yapıda", "Çok fazla imla hatası var", "Tonlama profesyonel yerine çok samimi").
+    
     CV Metni: ${cvText}`;
 
     try {
         const result = await model.generateContent(prompt);
         let text = result.response.text();
         
-        // JSON Temizleme (Markdown işaretlerini kaldır)
+        // JSON Temizleme
         text = text.replace(/```json/gi, '').replace(/```/gi, '').trim();
         const start = text.indexOf('{');
         const end = text.lastIndexOf('}');
