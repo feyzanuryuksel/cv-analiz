@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap, MessageSquare } from 'lucide-react';
+import { 
+  Upload, 
+  FileText, 
+  CheckCircle, 
+  AlertCircle, 
+  Award, 
+  Target, 
+  Brain, 
+  Sparkles, 
+  TrendingUp, 
+  Zap, 
+  MessageSquare,
+  Key // Yeni ikon eklendi
+} from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -91,7 +104,6 @@ function App() {
         } else {
           setError(response.data.error || "Bilinmeyen bir hata oluştu.");
         }
-        loading(false);
         setLoading(false);
       }, 500);
 
@@ -273,6 +285,26 @@ function App() {
               <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
             </div>
 
+            {/* Kritik Eksik Anahtar Kelimeler (YENİ) */}
+            {analysis.eksikAnahtarKelimeler && analysis.eksikAnahtarKelimeler.length > 0 && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
+                <div className="card-header">
+                  <Key size={24} color="#f59e0b" className="card-icon"/>
+                  <h3>Kritik Eksik Anahtar Kelimeler (ATS)</h3>
+                </div>
+                <div className="tags" style={{ marginTop: '1rem' }}>
+                  {analysis.eksikAnahtarKelimeler.map((kelime, i) => (
+                    <span key={i} className="tag" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#d97706', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                      {kelime}
+                    </span>
+                  ))}
+                </div>
+                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.8rem' }}>
+                  * Bu kelimeleri CV'nize eklemek ATS puanınızı artırabilir.
+                </p>
+              </div>
+            )}
+
             <div className="grid-container">
               <div className="card glass-effect hover-lift">
                 <div className="card-header">
@@ -332,7 +364,7 @@ function App() {
               </div>
             </div>
 
-            {/* YENİ EKLENEN MÜLAKAT SORULARI BÖLÜMÜ */}
+            {/* Mülakat Soruları Bölümü */}
             {analysis.mulakatSorulari && analysis.mulakatSorulari.length > 0 && (
               <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
                 <div className="card-header">
