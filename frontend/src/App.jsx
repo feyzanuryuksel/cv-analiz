@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap, MessageSquare } from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -91,6 +91,7 @@ function App() {
         } else {
           setError(response.data.error || "Bilinmeyen bir hata oluştu.");
         }
+        loading(false);
         setLoading(false);
       }, 500);
 
@@ -330,6 +331,25 @@ function App() {
                 </ul>
               </div>
             </div>
+
+            {/* YENİ EKLENEN MÜLAKAT SORULARI BÖLÜMÜ */}
+            {analysis.mulakatSorulari && analysis.mulakatSorulari.length > 0 && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
+                <div className="card-header">
+                  <MessageSquare size={24} className="card-icon"/>
+                  <h3>Mülakatta Karşılaşabileceğiniz Sorular</h3>
+                </div>
+                <ul className="feature-list" style={{ marginTop: '1rem' }}>
+                  {analysis.mulakatSorulari.map((soru, i) => (
+                    <li key={i} className="feature-item" style={{ alignItems: 'flex-start', marginBottom: '1rem' }}>
+                      <Brain size={18} color="#3b82f6" style={{ marginTop: '3px', flexShrink: 0 }} />
+                      <span style={{ lineHeight: '1.5', fontWeight: '500' }}>{soru}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </section>
         )}
       </main>
