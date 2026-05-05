@@ -84,7 +84,8 @@ async function analyzeCVWithAI(cvText) {
       "mulakatSorulari": [],
       "eksikAnahtarKelimeler": [],
       "profesyonellikSkoru": 0,
-      "dilGeriBildirimi": ""
+      "dilGeriBildirimi": "",
+      "kariyerYolHaritasi": []
     }
     
     Talimatlar:
@@ -92,6 +93,7 @@ async function analyzeCVWithAI(cvText) {
     2. "eksikAnahtarKelimeler": Sektör bazlı CV'de eksik olan 5 kritik anahtar kelimeyi listele.
     3. "profesyonellikSkoru": CV'nin dil bilgisi, imla ve profesyonel tonunu 0-100 arası puanla.
     4. "dilGeriBildirimi": Yazım dili hakkında spesifik eleştiriler yap (Örn: "Cümleler çok pasif yapıda", "Çok fazla imla hatası var", "Tonlama profesyonel yerine çok samimi").
+    5. "kariyerYolHaritasi": Adayın mevcut durumuna ve deneyimine bakarak bir sonraki adımını öngör (Örn: "Kıdemli Developer olmak için şunları yapmalısınız"). 1-2 yıllık bir kariyer yol haritası çizip atması gereken adımları 3-4 maddelik bir dizi olarak ekle.
     
     CV Metni: ${cvText}`;
 
@@ -162,6 +164,15 @@ app.post('/upload', upload.single('cv'), async (req, res) => {
     } catch (err) {
         console.error(`${RED}HATA:${RESET}`, err.message);
         if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        
+        // 429 Kota Hatasını Özel Olarak Yakala
+        if (err.message.includes('429') || err.message.includes('quota') || err.message.includes('Too Many Requests')) {
+            return res.status(429).json({ 
+                success: false, 
+                error: 'Yapay zeka analiz limiti şu an dolu. Lütfen 30 saniye bekleyip tekrar deneyin.' 
+            });
+        }
+        
         res.status(500).json({ success: false, error: err.message });
     }
 });
