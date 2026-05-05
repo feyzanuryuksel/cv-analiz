@@ -12,7 +12,8 @@ import {
   TrendingUp, 
   Zap, 
   MessageSquare,
-  Key // Yeni ikon eklendi
+  Key,
+  Languages 
 } from 'lucide-react';
 import './App.css';
 
@@ -261,23 +262,47 @@ function App() {
                     <p className="result-date">Analiz tamamlandı • {new Date().toLocaleDateString('tr-TR')}</p>
                   </div>
                 </div>
-                <div className="score-container">
-                  <div className="score-circle" style={{
-                    background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
-                  }}>
-                    <div className="score-inner">
-                      <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
-                      <span className="score-label">% ATS</span>
+                
+                <div style={{ display: 'flex', gap: '2rem' }}>
+                  <div className="score-container">
+                    <div className="score-circle" style={{
+                      background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
+                    }}>
+                      <div className="score-inner">
+                        <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
+                        <span className="score-label">% ATS</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="score-container">
+                    <div className="score-circle" style={{
+                      background: `conic-gradient(#3b82f6 ${analysis.profesyonellikSkoru * 3.6}deg, #e5e7eb 0deg)`
+                    }}>
+                      <div className="score-inner">
+                        <span className="score-number" style={{ color: '#3b82f6' }}>{analysis.profesyonellikSkoru || 0}</span>
+                        <span className="score-label">PROFESYONEL</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="score-bar">
-                <div className="score-bar-fill" style={{ width: `${analysis.atsUyumlulukSkoru || 0}%` }}></div>
+            </div>
+
+            {/* Dil ve Ton Analizi */}
+            <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #3b82f6' }}>
+              <div className="card-header">
+                <Languages size={24} color="#3b82f6" className="card-icon"/>
+                <h3>Dil Bilgisi ve Profesyonel Ton Analizi</h3>
+              </div>
+              <div style={{ padding: '1rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', marginTop: '1rem' }}>
+                <p className="summary-text" style={{ color: '#1f2937', fontWeight: '500' }}>
+                  {analysis.dilGeriBildirimi || "Analiz yapılamadı."}
+                </p>
               </div>
             </div>
 
-            <div className="summary-card glass-effect">
+            <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
               <div className="card-header">
                 <FileText size={24} className="card-icon"/>
                 <h3>Profesyonel Özet</h3>
@@ -285,7 +310,7 @@ function App() {
               <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
             </div>
 
-            {/* Kritik Eksik Anahtar Kelimeler (YENİ) */}
+            {/* Kritik Eksik Anahtar Kelimeler (ATS) */}
             {analysis.eksikAnahtarKelimeler && analysis.eksikAnahtarKelimeler.length > 0 && (
               <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
                 <div className="card-header">
@@ -299,9 +324,6 @@ function App() {
                     </span>
                   ))}
                 </div>
-                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.8rem' }}>
-                  * Bu kelimeleri CV'nize eklemek ATS puanınızı artırabilir.
-                </p>
               </div>
             )}
 
