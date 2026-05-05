@@ -82,12 +82,16 @@ async function analyzeCVWithAI(cvText) {
       "onerilenPozisyonlar": [],
       "atsUyumlulukSkoru": 0,
       "mulakatSorulari": [],
-      "eksikAnahtarKelimeler": []
+      "eksikAnahtarKelimeler": [],
+      "profesyonellikSkoru": 0,
+      "dilGeriBildirimi": ""
     }
     
     Talimatlar:
     1. "mulakatSorulari": Adayın deneyimlerine dayanarak 3 zorlayıcı teknik mülakat sorusu üret.
-    2. "eksikAnahtarKelimeler": ATS (Aday Takip Sistemleri) optimizasyonu için, adayın girmek istediği sektöre/pozisyonlara göre CV'sinde eksik olan 5 kritik anahtar kelimeyi veya yetkinliği (örn: "Docker bilgisi eksik", "Agile metodolojisi") listele.
+    2. "eksikAnahtarKelimeler": Sektör bazlı CV'de eksik olan 5 kritik anahtar kelimeyi listele.
+    3. "profesyonellikSkoru": CV'nin dil bilgisi, imla ve profesyonel tonunu 0-100 arası puanla.
+    4. "dilGeriBildirimi": Yazım dili hakkında spesifik eleştiriler yap (Örn: "Cümleler çok pasif yapıda", "Çok fazla imla hatası var", "Tonlama profesyonel yerine çok samimi").
     
     CV Metni: ${cvText}`;
 
@@ -107,7 +111,6 @@ async function analyzeCVWithAI(cvText) {
         return null;
     }
 }
-
 // ================= 5. ROTALAR =================
 
 app.get('/', (req, res) => {
