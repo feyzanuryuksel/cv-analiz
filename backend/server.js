@@ -28,7 +28,7 @@ if (!process.env.GEMINI_API_KEY) {
     console.error(`${RED}HATA: GEMINI_API_KEY bulunamadı!${RESET}`);
 }
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 app.use(cors());
 app.use(express.json());
