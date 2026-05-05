@@ -89,7 +89,8 @@ async function analyzeCVWithAI(cvText) {
         let text = result.response.text();
         
         // JSON Temizleme (Markdown işaretlerini kaldır)
-        text = text.replace(/```json/gi, '').replace(/```/gi, '').trim();
+        text = text.replace(/```json/gi, '').replace(/
+```/gi, '').trim();
         const start = text.indexOf('{');
         const end = text.lastIndexOf('}');
         if (start !== -1 && end !== -1) text = text.substring(start, end + 1);
