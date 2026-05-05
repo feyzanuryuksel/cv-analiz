@@ -80,8 +80,11 @@ async function analyzeCVWithAI(cvText) {
       "gucluYanlar": [],
       "gelistirilmesiGerekenler": [],
       "onerilenPozisyonlar": [],
-      "atsUyumlulukSkoru": 0
+      "atsUyumlulukSkoru": 0,
+      "mulakatSorulari": []
     }
+    
+    Talimat: "mulakatSorulari" dizisi içerisine, adayın CV'sindeki mevcut deneyimlerine ve teknoloji yığınına dayanarak mülakatta ona sorulabilecek 3 adet ZORLAYICI TEKNİK soru üret.
     CV Metni: ${cvText}`;
 
     try {
