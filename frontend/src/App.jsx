@@ -128,7 +128,7 @@ function App() {
         <div className="logo-icon">
           <Sparkles size={32} />
         </div>
-        <h1 className="gradient-text">AIaaaaaa CV Analyzer</h1>
+        <h1 className="gradient-text">AI CV Analyzer</h1>
         <p className="subtitle">
           Yapay zeka destekli CV analizi ile kariyerinizi şekillendirin
         </p>
