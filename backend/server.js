@@ -81,10 +81,14 @@ async function analyzeCVWithAI(cvText) {
       "gelistirilmesiGerekenler": [],
       "onerilenPozisyonlar": [],
       "atsUyumlulukSkoru": 0,
-      "mulakatSorulari": []
+      "mulakatSorulari": [],
+      "linkedinHakkinda": ""
     }
     
-    Talimat: "mulakatSorulari" dizisi içerisine, adayın CV'sindeki mevcut deneyimlerine ve teknoloji yığınına dayanarak mülakatta ona sorulabilecek 3 adet ZORLAYICI TEKNİK soru üret.
+    Talimatlar:
+    1. "mulakatSorulari": Adayın deneyimlerine dayanarak 3 zorlayıcı teknik soru üret.
+    2. "linkedinHakkinda": CV'deki verileri kullanarak, profesyonel, etkileyici, birinci ağızdan yazılmış (Örn: "Ben bir...") ve LinkedIn "Hakkında" kısmına uygun bir özet metin oluştur. Metin hem başarıları vurgulamalı hem de profesyonel bir duruş sergilemeli.
+    
     CV Metni: ${cvText}`;
 
     try {
