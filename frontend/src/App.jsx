@@ -14,7 +14,7 @@ import {
   MessageSquare,
   Key,
   Languages,
-  Compass // Kariyer yolu için yeni ikon
+  Compass
 } from 'lucide-react';
 import './App.css';
 
@@ -295,7 +295,7 @@ function App() {
               </div>
             </div>
 
-            {/* DÜZELTİLEN: Dil ve Ton Analizi Geri Bildirimi (Profesyonel Özet ile aynı stil) */}
+            {/* Dil ve Ton Analizi Geri Bildirimi */}
             {analysis.dilGeriBildirimi && (
               <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
                 <div className="card-header">
@@ -334,19 +334,19 @@ function App() {
               </div>
             )}
 
-            {/* YENİ EKLENEN: Kariyer Yol Haritası */}
+            {/* GÜNCELLENEN: Kariyer Yol Haritası (Profesyonel Özet ile aynı stil) */}
             {analysis.kariyerYolHaritasi && analysis.kariyerYolHaritasi.length > 0 && (
-              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #8b5cf6' }}>
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
                 <div className="card-header">
-                  <Compass size={24} color="#8b5cf6" className="card-icon"/>
+                  <Compass size={24} className="card-icon"/>
                   <h3>Kariyer Yol Haritası (1-2 Yıllık)</h3>
                 </div>
                 <ul className="feature-list" style={{ marginTop: '1rem' }}>
                   {analysis.kariyerYolHaritasi.map((adim, i) => (
                     <li key={i} className="feature-item" style={{ alignItems: 'flex-start', marginBottom: '1rem' }}>
                       <div style={{
-                        background: '#8b5cf6',
-                        color: 'white',
+                        backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                        color: '#4b5563',
                         borderRadius: '50%',
                         width: '24px',
                         height: '24px',
@@ -357,11 +357,12 @@ function App() {
                         fontWeight: 'bold',
                         flexShrink: 0,
                         marginTop: '2px',
-                        marginRight: '10px'
+                        marginRight: '12px'
                       }}>
                         {i + 1}
                       </div>
-                      <span style={{ lineHeight: '1.5', color: '#374151' }}>{adim}</span>
+                      {/* Metin, summary-text sınıfıyla Profesyonel Özet ile birebir aynı yapıldı */}
+                      <span className="summary-text" style={{ margin: 0 }}>{adim}</span>
                     </li>
                   ))}
                 </ul>
