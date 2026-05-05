@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { 
-  Upload, 
-  FileText, 
-  CheckCircle, 
-  AlertCircle, 
-  Award, 
-  Target, 
-  Brain, 
-  Sparkles, 
-  TrendingUp, 
-  Zap, 
-  MessageSquare,
-  Key // Yeni ikon eklendi
-} from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap } from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -285,26 +272,6 @@ function App() {
               <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
             </div>
 
-            {/* Kritik Eksik Anahtar Kelimeler (YENİ) */}
-            {analysis.eksikAnahtarKelimeler && analysis.eksikAnahtarKelimeler.length > 0 && (
-              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
-                <div className="card-header">
-                  <Key size={24} color="#f59e0b" className="card-icon"/>
-                  <h3>Kritik Eksik Anahtar Kelimeler (ATS)</h3>
-                </div>
-                <div className="tags" style={{ marginTop: '1rem' }}>
-                  {analysis.eksikAnahtarKelimeler.map((kelime, i) => (
-                    <span key={i} className="tag" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#d97706', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      {kelime}
-                    </span>
-                  ))}
-                </div>
-                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.8rem' }}>
-                  * Bu kelimeleri CV'nize eklemek ATS puanınızı artırabilir.
-                </p>
-              </div>
-            )}
-
             <div className="grid-container">
               <div className="card glass-effect hover-lift">
                 <div className="card-header">
@@ -363,25 +330,6 @@ function App() {
                 </ul>
               </div>
             </div>
-
-            {/* Mülakat Soruları Bölümü */}
-            {analysis.mulakatSorulari && analysis.mulakatSorulari.length > 0 && (
-              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
-                <div className="card-header">
-                  <MessageSquare size={24} className="card-icon"/>
-                  <h3>Mülakatta Karşılaşabileceğiniz Sorular</h3>
-                </div>
-                <ul className="feature-list" style={{ marginTop: '1rem' }}>
-                  {analysis.mulakatSorulari.map((soru, i) => (
-                    <li key={i} className="feature-item" style={{ alignItems: 'flex-start', marginBottom: '1rem' }}>
-                      <Brain size={18} color="#3b82f6" style={{ marginTop: '3px', flexShrink: 0 }} />
-                      <span style={{ lineHeight: '1.5', fontWeight: '500' }}>{soru}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
           </section>
         )}
       </main>
