@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { 
-  Upload, 
-  FileText, 
-  CheckCircle, 
-  AlertCircle, 
-  Award, 
-  Target, 
-  Brain, 
-  Sparkles, 
-  TrendingUp, 
-  Zap, 
-  MessageSquare, 
-  Linkedin 
-} from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap, MessageSquare } from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -104,6 +91,7 @@ function App() {
         } else {
           setError(response.data.error || "Bilinmeyen bir hata oluştu.");
         }
+        loading(false);
         setLoading(false);
       }, 500);
 
@@ -344,28 +332,7 @@ function App() {
               </div>
             </div>
 
-            {/* LinkedIn Hakkında Bölümü */}
-            {analysis.linkedinHakkinda && (
-              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #0077b5' }}>
-                <div className="card-header">
-                  <Linkedin size={24} color="#0077b5" className="card-icon"/>
-                  <h3>LinkedIn "Hakkında" Metni</h3>
-                </div>
-                <div style={{ 
-                  backgroundColor: 'rgba(0, 119, 181, 0.05)', 
-                  padding: '1.5rem', 
-                  borderRadius: '12px', 
-                  marginTop: '1rem',
-                  border: '1px dashed rgba(0, 119, 181, 0.2)'
-                }}>
-                  <p className="summary-text" style={{ fontStyle: 'italic', color: '#374151', whiteSpace: 'pre-line' }}>
-                    {analysis.linkedinHakkinda}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Mülakat Soruları Bölümü */}
+            {/* YENİ EKLENEN MÜLAKAT SORULARI BÖLÜMÜ */}
             {analysis.mulakatSorulari && analysis.mulakatSorulari.length > 0 && (
               <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
                 <div className="card-header">
@@ -382,7 +349,7 @@ function App() {
                 </ul>
               </div>
             )}
-            
+
           </section>
         )}
       </main>
