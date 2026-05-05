@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, AlertCircle, Award, Target, Brain, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { 
+  Upload, 
+  FileText, 
+  CheckCircle, 
+  AlertCircle, 
+  Award, 
+  Target, 
+  Brain, 
+  Sparkles, 
+  TrendingUp, 
+  Zap, 
+  MessageSquare,
+  Key,
+  Languages // Yeni ikon eklendi
+} from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -248,29 +262,80 @@ function App() {
                     <p className="result-date">Analiz tamamlandı • {new Date().toLocaleDateString('tr-TR')}</p>
                   </div>
                 </div>
-                <div className="score-container">
-                  <div className="score-circle" style={{
-                    background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
-                  }}>
-                    <div className="score-inner">
-                      <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
-                      <span className="score-label">% ATS</span>
+                
+                {/* İki Skor Yanyana Eklendi */}
+                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+                  <div className="score-container">
+                    <div className="score-circle" style={{
+                      background: `conic-gradient(#10b981 ${analysis.atsUyumlulukSkoru * 3.6}deg, #e5e7eb 0deg)`
+                    }}>
+                      <div className="score-inner">
+                        <span className="score-number">{analysis.atsUyumlulukSkoru || 0}</span>
+                        <span className="score-label">% ATS</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="score-container">
+                    <div className="score-circle" style={{
+                      background: `conic-gradient(#3b82f6 ${(analysis.profesyonellikSkoru || 0) * 3.6}deg, #e5e7eb 0deg)`
+                    }}>
+                      <div className="score-inner">
+                        <span className="score-number" style={{ color: '#3b82f6' }}>{analysis.profesyonellikSkoru || 0}</span>
+                        <span className="score-label">TON Puanı</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
               <div className="score-bar">
                 <div className="score-bar-fill" style={{ width: `${analysis.atsUyumlulukSkoru || 0}%` }}></div>
               </div>
             </div>
 
-            <div className="summary-card glass-effect">
+            {/* Dil ve Ton Analizi Geri Bildirimi (YENİ) */}
+            {analysis.dilGeriBildirimi && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #3b82f6' }}>
+                <div className="card-header">
+                  <Languages size={24} color="#3b82f6" className="card-icon"/>
+                  <h3>Dil Bilgisi ve Profesyonel Ton</h3>
+                </div>
+                <div style={{ padding: '1rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', marginTop: '1rem' }}>
+                  <p className="summary-text" style={{ color: '#1f2937', fontWeight: '500' }}>
+                    {analysis.dilGeriBildirimi}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
               <div className="card-header">
                 <FileText size={24} className="card-icon"/>
                 <h3>Profesyonel Özet</h3>
               </div>
               <p className="summary-text">{analysis.ozet || "Özet hazırlandığında burada görünecek."}</p>
             </div>
+
+            {/* Kritik Eksik Anahtar Kelimeler */}
+            {analysis.eksikAnahtarKelimeler && analysis.eksikAnahtarKelimeler.length > 0 && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
+                <div className="card-header">
+                  <Key size={24} color="#f59e0b" className="card-icon"/>
+                  <h3>Kritik Eksik Anahtar Kelimeler (ATS)</h3>
+                </div>
+                <div className="tags" style={{ marginTop: '1rem' }}>
+                  {analysis.eksikAnahtarKelimeler.map((kelime, i) => (
+                    <span key={i} className="tag" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#d97706', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                      {kelime}
+                    </span>
+                  ))}
+                </div>
+                <p style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.8rem' }}>
+                  * Bu kelimeleri CV'nize eklemek ATS puanınızı artırabilir.
+                </p>
+              </div>
+            )}
 
             <div className="grid-container">
               <div className="card glass-effect hover-lift">
@@ -330,6 +395,25 @@ function App() {
                 </ul>
               </div>
             </div>
+
+            {/* Mülakat Soruları Bölümü */}
+            {analysis.mulakatSorulari && analysis.mulakatSorulari.length > 0 && (
+              <div className="summary-card glass-effect" style={{ marginTop: '1.5rem' }}>
+                <div className="card-header">
+                  <MessageSquare size={24} className="card-icon"/>
+                  <h3>Mülakatta Karşılaşabileceğiniz Sorular</h3>
+                </div>
+                <ul className="feature-list" style={{ marginTop: '1rem' }}>
+                  {analysis.mulakatSorulari.map((soru, i) => (
+                    <li key={i} className="feature-item" style={{ alignItems: 'flex-start', marginBottom: '1rem' }}>
+                      <Brain size={18} color="#3b82f6" style={{ marginTop: '3px', flexShrink: 0 }} />
+                      <span style={{ lineHeight: '1.5', fontWeight: '500' }}>{soru}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </section>
         )}
       </main>
