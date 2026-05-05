@@ -70,9 +70,8 @@ async function uploadToS3(filePath, fileName) {
 // AI Analiz Fonksiyonu
 async function analyzeCVWithAI(cvText) {
     const prompt = `
-    Sen bir profesyonel İK uzmanısın. Aşağıdaki CV metnini analiz et ve sonucu SADECE JSON formatında döndür.
-    
-    JSON Formatı:
+    Sen bir profesyonel İK uzmanısın. SADECE JSON döndür. Açıklama yapma.
+    Format:
     {
       "adSoyad": "",
       "ozet": "",
@@ -82,15 +81,10 @@ async function analyzeCVWithAI(cvText) {
       "gelistirilmesiGerekenler": [],
       "onerilenPozisyonlar": [],
       "atsUyumlulukSkoru": 0,
-      "mulakatSorulari": [],
-      "linkedinHakkinda": ""
+      "mulakatSorulari": []
     }
     
-    Analiz Talimatları:
-    1. "mulakatSorulari": CV'deki teknik deneyimlere dayanarak adayı zorlayacak 3 adet spesifik teknik mülakat sorusu hazırla.
-    2. "linkedinHakkinda": CV'deki başarıları ve yetkinlikleri kullanarak, LinkedIn "Hakkında" kısmında kullanılabilecek, profesyonel, etkileyici ve birinci ağızdan (ben diliyle) yazılmış bir özet metin oluştur.
-    3. Diğer tüm alanları CV içeriğine göre doldur.
-    
+    Talimat: "mulakatSorulari" dizisi içerisine, adayın CV'sindeki mevcut deneyimlerine ve teknoloji yığınına dayanarak mülakatta ona sorulabilecek 3 adet ZORLAYICI TEKNİK soru üret.
     CV Metni: ${cvText}`;
 
     try {
