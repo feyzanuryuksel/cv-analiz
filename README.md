@@ -1,4 +1,4 @@
-# 🚀 AI CV Analyzer Pro
+# 🚀 AI CV Analyzer
 
 Yapay zeka destekli, modern ve kapsamlı bir CV analiz ve kariyer geliştirme platformu. Bu proje; adayların CV'lerini yükleyerek ATS (Aday Takip Sistemleri) uyumluluğunu ölçmelerini, eksik yeteneklerini görmelerini, mülakatlara hazırlanmalarını ve yapay zeka tarafından optimize edilmiş bir kariyer yol haritası edinmelerini sağlar.
 
